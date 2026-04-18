@@ -12,9 +12,9 @@
       --card: #111120;
       --border: #1c1c30;
       --border2: #28283d;
-      --accent: #ff4d2e;
-      --accent-dim: rgba(255,77,46,0.15);
-      --accent-glow: rgba(255,77,46,0.25);
+      --accent: #ff6b1a;
+      --accent-dim: rgba(255,107,26,0.15);
+      --accent-glow: rgba(255,107,26,0.25);
       --text: #f0f0fa;
       --muted: #5a5a78;
       --soft: #9898b8;
@@ -136,7 +136,15 @@ linear-gradient(
       margin-bottom: 1.25rem;
       opacity: 0; animation: fadeUp .7s .5s ease forwards;
     }
-    h1 .line2 { color: var(--accent); display: block; }
+    h1 .line2 {
+  display: block;
+  color: #f4a777;
+  text-shadow:
+    0 0 20px rgba(255,107,26,0.1),
+    0 0 40px rgba(255,107,26,0.1),
+    0 0 80px rgba(255,140,66,0.1),
+    0 0 120px rgba(255,80,20,0.1);
+}
     .hero-sub {
       font-size: 1.05rem; font-weight: 300; color: rgba(240,240,250,.7);
       max-width: 420px; line-height: 1.65; margin-bottom: 2rem;
@@ -371,7 +379,7 @@ linear-gradient(
   </div>
   <div class="hero-content">
     <div class="hero-tag"><span></span>Mumbai's Event Hub</div>
-    <h1>WHAT'S<br><span class="line2">HAPPENING</span><br>IN MUMBAI</h1>
+   <h1>WHAT'S<br>HAPPENING<br><span class="line2">IN MUMBAI</span></h1>
     <p class="hero-sub">Every concert, festival, college fest, food market and street event — all in one place, updated live.</p>
     <div class="hero-stats">
       <div class="hstat">
