@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Connect_it — Mumbai</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #08080e;
+      --surface: #0e0e18;
+      --card: #111120;
+      --border: #1c1c30;
+      --border2: #28283d;
+      --accent: #ff4d2e;
+      --accent-dim: rgba(255,77,46,0.15);
+      --accent-glow: rgba(255,77,46,0.25);
+      --text: #f0f0fa;
+      --muted: #5a5a78;
+      --soft: #9898b8;
+      --r: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: 62px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(8,8,14,0.6);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: background .3s;
+    }
+    nav.scrolled { background: rgba(8,8,14,0.97); }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem; letter-spacing: .04em;
+      color: var(--text); text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px var(--accent);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.4);opacity:.6} }
+    .nav-r { display: flex; align-items: center; gap: .85rem; }
+    .nav-badge {
+      font-size: .78rem; font-weight: 500; color: var(--soft);
+      border: 1px solid var(--border2); border-radius: 20px;
+      padding: 4px 14px; letter-spacing: .02em;
+    }
+    .btn-post {
+      font-family: 'Outfit', sans-serif; font-weight: 600; font-size: .88rem;
+      color: #fff; background: var(--accent);
+      border: none; border-radius: 8px; padding: 8px 20px;
+      cursor: pointer; transition: all .2s;
+      box-shadow: 0 2px 18px var(--accent-glow);
+    }
+    .btn-post:hover { transform: translateY(-2px); box-shadow: 0 6px 28px var(--accent-glow); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      height: 100vh; min-height: 600px;
+      display: flex; align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-img {
+      position: absolute; inset: 0;
+      background: url('/static/mumbai.png') center center / cover no-repeat;
+      transform: scale(1.08);
+      animation: zoomHero 18s ease-in-out infinite alternate;
+    }
+    @keyframes zoomHero { from{transform:scale(1.08)} to{transform:scale(1.0)} }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,8,14,0.25) 0%,
+        rgba(8,8,14,0.15) 40%,
+        rgba(8,8,14,0.75) 70%,
+        rgba(8,8,14,1) 100%
+      );
+    }
+    /* Animated light streaks overlay */
+    .hero-streak {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none;
+    }
+    .streak {
+      position: absolute; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,77,46,.6), transparent);
+      animation: streakMove 4s ease-in-out infinite;
+      opacity: 0;
+    }
+    .streak:nth-child(1) { top: 38%; width: 40%; left: -10%; animation-delay: 0s; }
+    .streak:nth-child(2) { top: 52%; width: 60%; left: 20%; animation-delay: 1.5s; }
+    .streak:nth-child(3) { top: 65%; width: 30%; left: 60%; animation-delay: 3s; }
+    @keyframes streakMove {
+      0%{opacity:0;transform:translateX(-20px)}
+      30%{opacity:1}
+      70%{opacity:1}
+      100%{opacity:0;transform:translateX(40px)}
+    }
+
+    .hero-content {
+      position: relative; z-index: 2;
+      padding: 0 2.5rem 5rem;
+      max-width: 800px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: .78rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp .6s .3s ease forwards;
+    }
+    .hero-tag span { width: 20px; height: 1px; background: var(--accent); display: block; }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 9vw, 7.5rem);
+      line-height: .95; letter-spacing: .02em;
+      margin-bottom: 1.25rem;
+      opacity: 0; animation: fadeUp .7s .5s ease forwards;
+    }
+    h1 .line2 { color: var(--accent); display: block; }
+    .hero-sub {
+      font-size: 1.05rem; font-weight: 300; color: rgba(240,240,250,.7);
+      max-width: 420px; line-height: 1.65; margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp .7s .7s ease forwards;
+    }
+    .hero-stats {
+      display: flex; gap: 2rem; flex-wrap: wrap;
+      opacity: 0; animation: fadeUp .7s .9s ease forwards;
+    }
+    .hstat { border-left: 2px solid var(--accent); padding-left: .85rem; }
+    .hstat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; line-height: 1; color: var(--text); }
+    .hstat-num span { color: var(--accent); }
+    .hstat-label { font-size: .75rem; font-weight: 500; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-top: 2px; }
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: var(--muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+    .scroll-arrow { width: 18px; height: 18px; border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted); transform: rotate(45deg); }
+
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+    /* ─── CONTROLS ─── */
+    .controls {
+      position: sticky; top: 62px; z-index: 100;
+      background: rgba(8,8,14,.97);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2.5rem;
+    }
+    .ctrl-inner { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: .85rem; }
+    .ctrl-row1 { display: flex; gap: .75rem; }
+    .search-box {
+      flex: 1; display: flex; align-items: center; gap: .6rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0 1rem;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+    .search-box svg { color: var(--muted); flex-shrink: 0; }
+    .search-box input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-family: 'Outfit', sans-serif;
+      font-size: .95rem; padding: .78rem 0; width: 100%;
+    }
+    .search-box input::placeholder { color: var(--muted); }
+    .area-sel {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 0 14px; border-radius: 10px;
+      font-family: 'Outfit', sans-serif; font-size: .88rem;
+      cursor: pointer; outline: none; min-width: 150px;
+      transition: border-color .2s;
+    }
+    .area-sel:focus { border-color: var(--accent); }
+    .area-sel option { background: #0e0e18; }
+
+    /* Filter pills — horizontal single row */
+    .filter-row { display: flex; gap: .45rem; align-items: center; overflow-x: auto; padding-bottom: 2px; }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .filter-row { scrollbar-width: none; }
+    .flabel { font-size: .72rem; font-weight: 600; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; flex-shrink: 0; margin-right: .25rem; }
+    .fpill {
+      white-space: nowrap; flex-shrink: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--soft); padding: 5px 15px; border-radius: 20px;
+      font-family: 'Outfit', sans-serif; font-size: .82rem; font-weight: 500;
+      cursor: pointer; transition: all .18s;
+    }
+    .fpill:hover { border-color: var(--border2); color: var(--text); }
+    .fpill.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; box-shadow: 0 2px 14px var(--accent-glow); }
+
+    /* ─── MAIN ─── */
+    .main { max-width: 1180px; margin: 0 auto; padding: 2.5rem 2.5rem 6rem; }
+    .sec-bar { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.5rem; }
+    .sec-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: .04em; color: var(--text); }
+    .sec-count { font-size: .82rem; color: var(--muted); }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 1rem; }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: all .22s cubic-bezier(.25,.8,.25,1);
+      animation: cardIn .45s ease both;
+    }
+    @keyframes cardIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .card:hover { border-color: var(--border2); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+
+    .card-accent { height: 3px; }
+    .ca-Music    { background: linear-gradient(90deg,#7c3aed,#a855f7); }
+    .ca-Food     { background: linear-gradient(90deg,#ea580c,#f97316); }
+    .ca-Tech     { background: linear-gradient(90deg,#0891b2,#06b6d4); }
+    .ca-Sports   { background: linear-gradient(90deg,#16a34a,#22c55e); }
+    .ca-Art      { background: linear-gradient(90deg,#db2777,#ec4899); }
+    .ca-Culture  { background: linear-gradient(90deg,#ca8a04,#eab308); }
+    .ca-default  { background: linear-gradient(90deg,var(--accent),#ff8a65); }
+
+    .card-body { padding: 1.2rem 1.2rem .9rem; flex: 1; display: flex; flex-direction: column; }
+    .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: .9rem; }
+
+    .cbadge {
+      font-size: .72rem; font-weight: 600; letter-spacing: .04em;
+      padding: 3px 11px; border-radius: 20px; text-transform: uppercase;
+    }
+    .cb-Music   { background: rgba(139,92,246,.18); color: #c4b5fd; }
+    .cb-Food    { background: rgba(249,115,22,.18); color: #fdba74; }
+    .cb-Tech    { background: rgba(6,182,212,.18);  color: #67e8f9; }
+    .cb-Sports  { background: rgba(34,197,94,.18);  color: #86efac; }
+    .cb-Art     { background: rgba(236,72,153,.18); color: #f9a8d4; }
+    .cb-Culture { background: rgba(234,179,8,.18);  color: #fde047; }
+    .cb-ColFest { background: rgba(59,130,246,.18); color: #93c5fd; }
+    .cb-def     { background: rgba(255,77,46,.15);  color: #ff9a82; }
+
+    .cprice { font-size: .82rem; font-weight: 700; }
+    .cprice.free { color: #4ade80; }
+    .cprice.paid { color: #fbbf24; }
+
+    .card h3 {
+      font-family: 'Outfit', sans-serif; font-weight: 700;
+      font-size: 1.05rem; line-height: 1.3; margin-bottom: .45rem; letter-spacing: -.01em;
+    }
+    .card-desc {
+      font-size: .84rem; font-weight: 300; color: var(--soft);
+      line-height: 1.55; flex: 1; margin-bottom: 1rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .card-meta { display: flex; flex-direction: column; gap: .3rem; }
+    .cmeta { display: flex; align-items: center; gap: .5rem; font-size: .79rem; color: var(--soft); }
+    .cmeta-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; opacity: .6; flex-shrink: 0; }
+
+    .card-foot {
+      padding: .85rem 1.2rem;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .org { display: flex; align-items: center; gap: 7px; font-size: .77rem; color: var(--muted); }
+    .org-av {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; font-weight: 700; color: var(--soft);
+      flex-shrink: 0;
+    }
+    .del-btn {
+      background: none; border: none; color: var(--muted); cursor: pointer;
+      padding: 5px; border-radius: 6px; display: flex;
+      transition: all .18s;
+    }
+    .del-btn:hover { color: #f87171; background: rgba(248,113,113,.1); }
+
+    /* ─── EMPTY ─── */
+    .empty { grid-column:1/-1; text-align:center; padding:5rem 1rem; }
+    .empty-box { width:64px;height:64px;border-radius:16px;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem; }
+    .empty h3 { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;margin-bottom:.4rem; }
+    .empty p { color:var(--muted);font-size:.88rem; }
+
+    /* ─── LOADING ─── */
+    .loading { grid-column:1/-1;display:flex;flex-direction:column;align-items:center;gap:1rem;padding:5rem;color:var(--muted); }
+    .spin { width:28px;height:28px;border-radius:50%;border:2px solid var(--border);border-top-color:var(--accent);animation:spin .7s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* ─── MODAL ─── */
+    .overlay { display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:1rem; }
+    .overlay.open { display:flex; }
+    .modal { background:var(--card);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:mIn .28s cubic-bezier(.25,.8,.25,1);box-shadow:0 40px 80px rgba(0,0,0,.7); }
+    @keyframes mIn { from{opacity:0;transform:scale(.96) translateY(12px)} to{opacity:1;transform:scale(1) translateY(0)} }
+    .modal-head { padding:1.5rem 1.5rem 0;display:flex;justify-content:space-between;align-items:flex-start; }
+    .modal-head h2 { font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.04em; }
+    .modal-head p { font-size:.83rem;color:var(--muted);margin-top:2px; }
+    .mclose { width:30px;height:30px;border-radius:8px;background:var(--surface);border:1px solid var(--border);color:var(--soft);cursor:pointer;font-size:.95rem;display:flex;align-items:center;justify-content:center;transition:all .18s; flex-shrink:0; }
+    .mclose:hover { color:var(--text);border-color:var(--border2); }
+    .modal-body { padding:1.4rem 1.5rem 1.5rem; }
+    .fg { margin-bottom:.9rem; }
+    .fg label { display:block;font-size:.75rem;font-weight:600;color:var(--muted);margin-bottom:.35rem;letter-spacing:.05em;text-transform:uppercase; }
+    .fg input,.fg select,.fg textarea {
+      width:100%;background:var(--surface);border:1px solid var(--border);border-radius:9px;
+      color:var(--text);padding:.72rem 1rem;font-family:'Outfit',sans-serif;font-size:.9rem;
+      outline:none;transition:border-color .2s,box-shadow .2s;
+    }
+    .fg input:focus,.fg select:focus,.fg textarea:focus { border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim); }
+    .fg textarea { resize:vertical;min-height:76px; }
+    .fg select option { background:#111120; }
+    .frow { display:grid;grid-template-columns:1fr 1fr;gap:.75rem; }
+    .btn-submit {
+      width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;
+      padding:.9rem;font-family:'Outfit',sans-serif;font-weight:700;font-size:.95rem;
+      cursor:pointer;transition:all .2s;margin-top:.5rem;
+      box-shadow:0 4px 20px var(--accent-glow);
+    }
+    .btn-submit:hover { transform:translateY(-2px);box-shadow:0 8px 32px var(--accent-glow); }
+
+    /* ─── TOAST ─── */
+    .toast { position:fixed;bottom:2rem;right:2rem;z-index:999;background:var(--card);border:1px solid rgba(74,222,128,.35);color:#4ade80;padding:.8rem 1.2rem;border-radius:10px;font-size:.88rem;font-weight:500;box-shadow:0 8px 30px rgba(0,0,0,.4);opacity:0;transform:translateY(8px);transition:all .3s;pointer-events:none; }
+    .toast.show { opacity:1;transform:translateY(0); }
+
+    @media(max-width:640px) {
+      nav { padding:0 1.25rem; }
+      .hero-content { padding:0 1.25rem 4rem; }
+      .controls { padding:.85rem 1.25rem; }
+      .main { padding:1.5rem 1.25rem 4rem; }
+      .grid { grid-template-columns:1fr; }
+      .frow { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="logo" href="#">
+    <div class="logo-dot"></div>
+    CONNECT_IT
+  </a>
+  <div class="nav-r">
+    <span class="nav-badge">Mumbai</span>
+    <button class="btn-post" onclick="openModal()">+ Post Event</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-streak">
+    <div class="streak"></div>
+    <div class="streak"></div>
+    <div class="streak"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag"><span></span>Mumbai's Event Hub</div>
+    <h1>WHAT'S<br><span class="line2">HAPPENING</span><br>IN MUMBAI</h1>
+    <p class="hero-sub">Every concert, festival, college fest, food market and street event — all in one place, updated live.</p>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-num" id="stat-n">—</div>
+        <div class="hstat-label">Events Live</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">24</div>
+        <div class="hstat-label">City Wards</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">7</div>
+        <div class="hstat-label">Categories</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-arrow"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="ctrl-inner">
+    <div class="ctrl-row1">
+      <div class="search-box">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="search" placeholder="Search events, venues, categories…" oninput="loadEvents()"/>
+      </div>
+      <select class="area-sel" id="area-sel" onchange="loadEvents()"></select>
+    </div>
+    <div class="filter-row">
+      <span class="flabel">Filter</span>
+      <div id="cat-pills"></div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENTS -->
+<main class="main">
+  <div class="sec-bar">
+    <span class="sec-title">Upcoming Events</span>
+    <span class="sec-count" id="ev-count"></span>
+  </div>
+  <div class="grid" id="grid">
+    <div class="loading"><div class="spin"></div>Loading Mumbai events…</div>
+  </div>
+</main>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="backdropClose(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2>Post an Event</h2>
+        <p>Share what's happening in Mumbai</p>
+      </div>
+      <button class="mclose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="fg"><label>Event Title *</label><input type="text" id="f-title" placeholder="e.g. Sunburn Arena ft. Martin Garrix"/></div>
+      <div class="fg"><label>Description</label><textarea id="f-desc" placeholder="What makes this event special?"></textarea></div>
+      <div class="frow">
+        <div class="fg"><label>Category *</label>
+          <select id="f-cat">
+            <option value="">Select…</option>
+            <option>Music</option><option>Food</option><option>Tech</option>
+            <option>Sports</option><option>Art</option><option>Culture</option><option>College Fest</option>
+          </select>
+        </div>
+        <div class="fg"><label>Price</label><input type="text" id="f-price" placeholder="Free / ₹500"/></div>
+      </div>
+      <div class="fg"><label>Venue *</label><input type="text" id="f-loc" placeholder="e.g. MMRDA Grounds, BKC"/></div>
+      <div class="frow">
+        <div class="fg"><label>Area *</label><input type="text" id="f-area" placeholder="e.g. Bandra"/></div>
+        <div class="fg"><label>Organizer</label><input type="text" id="f-org" placeholder="e.g. Percept Live"/></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>Date *</label><input type="date" id="f-date"/></div>
+        <div class="fg"><label>Time</label><input type="time" id="f-time"/></div>
+      </div>
+      <button class="btn-submit" onclick="submitEvent()">Post Event to Mumbai</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Event posted to Mumbai!</div>
+
+<script>
+  let activeCat = 'All';
+
+  const BADGE = {
+    'Music':'cb-Music','Food':'cb-Food','Tech':'cb-Tech',
+    'Sports':'cb-Sports','Art':'cb-Art','Culture':'cb-Culture','College Fest':'cb-ColFest'
+  };
+  const BAR = {
+    'Music':'ca-Music','Food':'ca-Food','Tech':'ca-Tech',
+    'Sports':'ca-Sports','Art':'ca-Art','Culture':'ca-Culture'
+  };
+
+  function fmtDate(d) {
+    return new Date(d).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  }
+  function initials(s) {
+    return s ? s.trim().split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : 'EV';
+  }
+  function isFree(p) { return !p || p.toLowerCase().includes('free'); }
+
+  // Sticky nav
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  async function loadCategories() {
+    const cats = await (await fetch('/api/categories')).json();
+    document.getElementById('cat-pills').innerHTML = cats.map(c =>
+      `<button class="fpill${c===activeCat?' active':''}" onclick="setCat('${c}')">${c}</button>`
+    ).join('');
+  }
+
+  async function loadAreas() {
+    const areas = await (await fetch('/api/areas')).json();
+    document.getElementById('area-sel').innerHTML = areas.map(a =>
+      `<option value="${a}">${a === 'All' ? 'All Areas' : a}</option>`
+    ).join('');
+  }
+
+  function setCat(cat) {
+    activeCat = cat;
+    document.querySelectorAll('.fpill').forEach(b => b.classList.toggle('active', b.textContent.trim()===cat));
+    loadEvents();
+  }
+
+  async function loadEvents() {
+    const search = document.getElementById('search').value;
+    const area = document.getElementById('area-sel').value || 'All';
+    const params = new URLSearchParams({category: activeCat, search, area});
+    const events = await (await fetch(`/api/events?${params}`)).json();
+    document.getElementById('stat-n').textContent = events.length;
+    document.getElementById('ev-count').textContent = `${events.length} event${events.length!==1?'s':''} found`;
+    renderCards(events);
+  }
+
+  function renderCards(events) {
+    const grid = document.getElementById('grid');
+    if (!events.length) {
+      grid.innerHTML = `<div class="empty">
+        <div class="empty-box">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="color:var(--muted)">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+        </div>
+        <h3>No Events Found</h3>
+        <p>Try a different filter or add a new event to Mumbai</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = events.map((e, i) => {
+      const free = isFree(e.price);
+      return `<div class="card" style="animation-delay:${Math.min(i,10)*.05}s">
+        <div class="card-accent ${BAR[e.category]||'ca-default'}"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="cbadge ${BADGE[e.category]||'cb-def'}">${e.category}</span>
+            <span class="cprice ${free?'free':'paid'}">${e.price||'Free'}</span>
+          </div>
+          <h3>${e.title}</h3>
+          <p class="card-desc">${e.description||'No description provided.'}</p>
+          <div class="card-meta">
+            <div class="cmeta">
+              <div class="cmeta-icon">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              </div>
+              ${fmtDate(e.date)}${e.time ? ' · ' + e.time : ''}
+            </div>
+            <div class="cmeta">
+              <div class="cmeta-icon">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              ${e.location}
+            </div>
+          </div>
+        </div>
+        <div class="card-foot">
+          <div class="org">
+            <div class="org-av">${initials(e.organizer||e.area)}</div>
+            ${e.organizer||e.area}
+          </div>
+          <button class="del-btn" onclick="delEvent(${e.id})" title="Remove">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6l-1 14H6L5 6M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function delEvent(id) {
+    if (!confirm('Remove this event?')) return;
+    await fetch(`/api/events/${id}`, {method:'DELETE'});
+    loadEvents();
+  }
+
+  function openModal() { document.getElementById('overlay').classList.add('open'); }
+  function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+  function backdropClose(e) { if (e.target===document.getElementById('overlay')) closeModal(); }
+
+  async function submitEvent() {
+    const data = {
+      title: document.getElementById('f-title').value.trim(),
+      description: document.getElementById('f-desc').value.trim(),
+      category: document.getElementById('f-cat').value,
+      price: document.getElementById('f-price').value.trim() || 'Free',
+      location: document.getElementById('f-loc').value.trim(),
+      area: document.getElementById('f-area').value.trim(),
+      organizer: document.getElementById('f-org').value.trim(),
+      date: document.getElementById('f-date').value,
+      time: document.getElementById('f-time').value,
+    };
+    if (!data.title||!data.category||!data.location||!data.area||!data.date) {
+      alert('Please fill all required fields (*)'); return;
+    }
+    const res = await fetch('/api/events', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+    if (res.ok) {
+      closeModal();
+      ['f-title','f-desc','f-price','f-loc','f-area','f-org','f-date','f-time'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('f-cat').value='';
+      loadEvents(); loadAreas();
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), 3000);
+    }
+  }
+
+  loadCategories(); loadAreas(); loadEvents();
+</script>
+</body>
+</html>
